@@ -1,0 +1,169 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    string name;
+    int PRN;
+    Node* next;
+
+    // Constructor to initialize a node
+    Node(string name, int prn) {
+        this->PRN = prn;
+        this->name = name;
+        this->next = NULL;
+    }
+};
+
+class Member {
+private:
+    int cnt;
+    Node* head;
+    Node* tail;
+
+public:
+    Member() {
+        cnt = 0;
+        head = NULL;
+        tail = NULL;
+    }
+
+    // Add a regular member after the president
+    void addMember(string name, int prn) {
+        if (head == NULL) {
+            cout << "Please add the president first!" << endl;
+            return;
+        }
+
+        Node* newNode = new Node(name, prn);
+
+        // Insert the new member after the president (head)
+        newNode->next = head->next;
+        head->next = newNode;
+
+        // If the new member is inserted at the end, update the tail
+        if (newNode->next == NULL) {
+            tail = newNode;
+        }
+
+        cnt++;
+    }
+
+    // Add president at the beginning of the list
+    void addPresident(string name, int prn) {
+        Node* newNode = new Node(name, prn);
+
+        // If list is empty, both head and tail will point to this node
+        if (head == NULL) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            newNode->next = head;
+            head = newNode;
+        }
+
+        cnt++;
+    }
+
+    // Add secretary at the end of the list
+    void addSecretary(string name, int prn) {
+        if (head == NULL) {
+            cout << "Please add the president first!" << endl;
+            return;
+        }
+
+        Node* newNode = new Node(name, prn);
+        if (tail == NULL) {
+            head->next = newNode;
+            tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+
+        cnt++;
+    }
+
+    // Function to count the number of members
+    int count() {
+        return cnt;
+    }
+
+    // Function to display all the members
+    void display() {
+        Node* current = head;
+        if (current == NULL) {
+            cout << "No members in the club!" << endl;
+            return;
+        }
+
+        // Display the list of members starting from the president
+        while (current != NULL) {
+            cout << current->name << " (PRN: " << current->PRN << ") --> ";
+            current = current->next;
+        }
+        cout << "NULL" << endl;
+    }
+
+    // Function to delete a member by PRN
+    void deleteMember(int prn) {
+        if (head == NULL) {
+            cout << "No members to delete!" << endl;
+            return;
+        }
+
+        // If the member to be deleted is the head (president)
+        if (head->PRN == prn) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+            cnt--;
+            cout << "President (PRN: " << prn << ") deleted." << endl;
+            return;
+        }
+
+        // Otherwise, search for the member to delete
+        Node* current = head;
+        while (current->next != NULL && current->next->PRN != prn) {
+            current = current->next;
+        }
+
+        if (current->next == NULL) {
+            cout << "Member with PRN " << prn << " not found!" << endl;
+        } else {
+            Node* temp = current->next;
+            current->next = current->next->next;
+
+            // If the deleted member was the tail (secretary), update the tail
+            if (temp == tail) {
+                tail = current;
+            }
+
+            delete temp;
+            cnt--;
+            cout << "Member (PRN: " << prn << ") deleted." << endl;
+        }
+    }
+};
+
+int main() {
+    Member obj;
+    obj.addPresident("Abhay", 101);  
+    obj.addMember("Rishabh", 102);
+    obj.addMember("Sahil", 103);
+    obj.addMember("Pratham", 104);   
+    obj.addSecretary("Abhi", 105); 
+
+    
+    cout << "Club Members:" << endl;
+    obj.display();
+
+    cout << "\nTotal number of members: " << obj.count() << endl;
+    // Deleting a member by PRN
+    // obj.deleteMember(102);  // Deleting Rishabh with PRN 102
+    // cout << "\nAfter deletion:" << endl;
+    // obj.display();
+    // cout << "Total number of members: " << obj.count() << endl;
+
+    return 0;
+}

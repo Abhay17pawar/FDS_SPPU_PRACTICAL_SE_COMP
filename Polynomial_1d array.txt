@@ -1,0 +1,46 @@
+# polynomial 1 degree
+def input(arr):
+    final = []
+    for i in range(len(arr)):
+        final.append(f"{arr[i]}*x^{i}")
+    plus = len(final) - 1
+    fin = []
+    for i in range(plus):
+        fin.append(f" + {final[i]}")
+    fin.append(final[plus])
+    fin.reverse()
+    for i in range(len(fin)):
+        print(fin[i], end="")
+        
+def add(arr,a):
+    maxlen = max(len(arr),len(a))
+    result = [0]*maxlen
+    for i in range(len(arr)):
+        result[i] += arr[i]
+    for j in range(len(a)):
+        result[j] += a[j]
+    return result
+
+def mul(arr,a):
+    fullen = len(arr) + len(a) 
+    res = [0]*fullen
+    for i in range(len(arr)):
+        for j in range(len(a)):
+            res[i+j] += arr[i]*a[j]
+    return res
+def eval(arr,x):
+    summ = 0
+    for i in range(len(arr)):
+        summ += arr[i]*(x**i)
+    print(summ)
+arr = [1,2]
+a = [3,2]
+input(arr)
+finalarr = add(arr,a)
+print()
+input(finalarr)
+print()
+finalmul = mul(arr,a)
+input(finalmul)
+print()
+eval(arr,3)

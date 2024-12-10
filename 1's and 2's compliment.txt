@@ -1,0 +1,96 @@
+// one's complement and two's complement
+#include <iostream>
+#include <string>
+#include <stack>
+using namespace std;
+class Node{
+    public: 
+    char bit;
+    Node* next;
+    Node* prev;
+    
+    Node(char b){
+        bit = b;
+        next = NULL;
+        prev = NULL;
+    }
+};
+class BinaryNumber{
+    public :
+        Node* head;
+        Node* tail;
+        BinaryNumber(){
+            head = NULL;
+            tail = NULL;
+        }
+        void insertBit(char bit){
+            Node* newNode = new Node(bit);
+            if(!head){
+                head = tail = newNode;
+            }
+            else{
+                tail -> next = newNode;
+                newNode -> prev = tail;
+                tail = newNode;
+            }
+        }
+        void one(){
+            Node* current = head;
+            while(current){
+                current -> bit = (current->bit == '0') ? '1' : '0';
+                current = current -> next;
+            }
+        }
+         void display() {
+        Node* current = head;
+        while (current) {
+            cout << current->bit;
+            current = current->next;
+        }
+        cout << endl;
+    }
+    void two() {
+    Node* current = tail;   // Start from the tail (LSB)
+    bool carry = true;       // Start with carry as 1 to add 1
+
+    while (current) {
+        if (carry) {
+            if (current->bit == '0') {
+                current->bit = '1'; // No more carry needed after this
+                carry = false;
+            } else {
+                current->bit = '0'; // Continue the carry
+            }
+        }
+        current = current->prev; // Move to the next more significant bit
+    }
+}
+
+
+};
+
+int main() {
+      BinaryNumber binary;
+    
+    // Input binary number
+    string input;
+    cout << "Enter a binary number: ";
+    cin >> input;
+
+    // Insert each bit of the binary number into the doubly linked list
+    for (char c : input) {
+        binary.insertBit(c);
+    }
+     cout << "\nOriginal binary number: ";
+    binary.display();
+
+    // Compute and display 1's complement
+    binary.one();
+    cout << "1's complement: ";
+    binary.display();
+     binary.two();
+    cout << "2's complement: ";
+    binary.display();
+    
+    return 0;
+}
